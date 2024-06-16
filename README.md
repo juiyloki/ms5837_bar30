@@ -27,8 +27,53 @@ Clone with `--recursive` in order to get the necessary `ms5837-python` library:
 > The python library will generate a syntax error if there is a hyphen in the name.\
 > Therefore, we need to move ms5837 package in the submodule.
 
-
 ```
+sudo apt-get install i2c-tools
+sudo pip3 install smbus2
+```
+
+I2C Address: default is `0x76`, so check the i2c address.
+
+```sh: Terminal
+i2cdetect -y 1
+Warning: Can't use SMBus Quick Write command, will skip some addresses
+     0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
+00:
+10:
+20:
+30: -- -- -- -- -- -- -- --
+40:
+50: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+60:
+70:
+
+# If it is not detected by i2cdtect, run the following:
+# If you use more than two, you will need to use another device as dump detection is not possible with 0x76.
+
+i2cdump -y 1 0x76
+No size specified (using byte-data access)
+     0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f    0123456789abcdef
+00: 7b 00 XX XX XX XX XX XX XX XX XX XX XX XX XX XX    {.XXXXXXXXXXXXXX
+10: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX    XXXXXXXXXXXXXXXX
+20: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX    XXXXXXXXXXXXXXXX
+30: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX    XXXXXXXXXXXXXXXX
+40: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX    XXXXXXXXXXXXXXXX
+50: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX    XXXXXXXXXXXXXXXX
+60: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX    XXXXXXXXXXXXXXXX
+70: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX    XXXXXXXXXXXXXXXX
+80: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX    XXXXXXXXXXXXXXXX
+90: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX    XXXXXXXXXXXXXXXX
+a0: 00 00 b2 b2 b1 b1 6b 6b 71 71 78 78 67 67 XX XX    ..????kkqqxxggXX
+b0: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX    XXXXXXXXXXXXXXXX
+c0: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX    XXXXXXXXXXXXXXXX
+d0: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX    XXXXXXXXXXXXXXXX
+e0: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX    XXXXXXXXXXXXXXXX
+f0: XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX    XXXXXXXXXXXXXXXX
+```
+
+Build and run execute the following:
+
+```sh
 cd dev_ws/src
 git clone -b master --recursive https://github.com/tasada038/ms5837_bar_ros.git
 cd ~/dev_ws/src/ms5837_bar_ros/ms5837_bar_ros/
